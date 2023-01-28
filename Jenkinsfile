@@ -5,7 +5,7 @@ pipeline {
 
         stage ("ckeckout"){
             steps {
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github-creds', url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
+               checkout scmGit(branches: [[name: '*/jenkins-with-terraform']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
 
             }  
         }
@@ -34,6 +34,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying infotech web server"
+                    def "ec2Instance = ${EC2_PUBLIC_IP}"
                     def shellcmd = "bash ./install_apache.sh"
                     // def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
 
