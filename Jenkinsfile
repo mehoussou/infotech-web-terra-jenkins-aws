@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying infotech web server"
-                    def "ec2Instance = ${EC2_PUBLIC_IP}"
+                    // def "ec2Instance = ${EC2_PUBLIC_IP}"
                     def shellcmd = "bash ./install_apache.sh"
                     // def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
 
