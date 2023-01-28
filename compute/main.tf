@@ -35,9 +35,6 @@ resource "aws_autoscaling_group" "web" {
   max_size            = 3
   desired_capacity    = 2
 
-#   tags = {
-
-#   }
 
   launch_template {
     id      = aws_launch_template.web.id

@@ -1,4 +1,4 @@
 
-output "ec2_public_ip" {
-  value = module.public
-}
+# output "ec2_public_ip" {
+#   value = aws_launch_template.
+# }
