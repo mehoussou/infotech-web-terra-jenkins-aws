@@ -4,7 +4,10 @@ pipeline {
     stages {
 
         stage ("ckeckout"){
-            checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github-creds', url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github-creds', url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
+
+            }  
         }
 
         stage("provision server") {
