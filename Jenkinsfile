@@ -102,7 +102,7 @@ pipeline {
         stage ("ckeckout"){
             checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github-creds', url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
         }
-        
+
         stage("provision server") {
             environment {
                  AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
@@ -114,6 +114,10 @@ pipeline {
                     dir('terraform') {
                         sh "terraform init"
                         sh "terraform apply --auto-approve"
+                        EC2_PUBLIC_IP = sh (
+                            script: "terraform output ec2_public_ip",
+                            returnStdout: true
+                        ).trim()
                     }
                 }
             }
@@ -124,6 +128,7 @@ pipeline {
                 script {
                     echo "Deploying infotech web server"
                     def shellcmd = "bash ./install_apache.sh"
+                    // def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
 
                 }
 
@@ -132,5 +137,5 @@ pipeline {
        
     }
 
-  }
 }
+
