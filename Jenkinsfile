@@ -21,7 +21,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            git "git@github.com:mehoussou/infotech-web-terra-jenkins-aws.git"
+                            git "https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git"
                         }
                     }
                 }
