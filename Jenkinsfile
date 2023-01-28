@@ -1,25 +1,35 @@
 pipeline {
     agent any
+    parameters {
+        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
+        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+        booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
+    }
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
 
     stages {
 
         stage ("ckeckout"){
             steps {
-               checkout scmGit(branches: [[name: '*/jenkins-with-terraform']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
-
+                script {
+                    dir ("terraform")
+                }
+            //    checkout scmGit(branches: [[name: '*/jenkins-with-terraform']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git']])
+                        
+                        git "https://github.com/mehoussou/infotech-web-terra-jenkins-aws.git"  
             }  
         }
-
+    
         stage("provision server") {
-            environment {
-                 AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
-                 AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-                //  TF_VAR_env_prefix = 'test'
-            }
             steps {
                 script{
                     dir('terraform') {
                         sh "terraform init"
+                        sh "terraform plan"
                         sh "terraform apply --auto-approve"
                         // EC2_PUBLIC_IP = sh (
                         //     script: "terraform output ec2_public_ip",
@@ -27,6 +37,14 @@ pipeline {
                         // ).trim()
                     }
                 }
+            }
+        }
+
+        stage ("plan") {
+            steps {
+                sh "terraform init -input=false"
+                sh "terraform workspace select ${environment} | terraform workspace new ${environment}"
+                sh "terraform plan -input=false -out tfplan"
             }
         }
 
