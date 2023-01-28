@@ -33,9 +33,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    echo "Deploying infotech web server"
+                    echo "waiting for web server to initialize..."
+                    sleep (time: 120, unit: "SECONDS")
+
+                    echo "Deploying infotech web server..."
                     // def "ec2Instance = ${EC2_PUBLIC_IP}"
-                    def shellcmd = "bash ./install_apache.sh"
+                    sh "./install_apache.sh"
                     // def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
 
                 }
