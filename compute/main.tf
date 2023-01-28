@@ -31,9 +31,9 @@ resource "aws_launch_template" "web" {
 resource "aws_autoscaling_group" "web" {
   name                = "web"
   vpc_zone_identifier = tolist(var.public_subnet)
-  min_size            = 1
-  max_size            = 2
-  desired_capacity    = 3
+  min_size            = 2
+  max_size            = 3
+  desired_capacity    = 2
 
 #   tags = {
 
