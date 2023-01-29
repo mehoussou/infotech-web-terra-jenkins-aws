@@ -60,7 +60,7 @@ resource "aws_route" "default_public_route" {
 
 resource "aws_security_group" "web_sg" {
   name        = "web_sg"
-  description = "Allow all inbound HTTP traffic"
+  description = "Allow incoming HTTP connections"
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
