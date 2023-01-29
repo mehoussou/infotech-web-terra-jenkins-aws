@@ -1,2 +1,2 @@
 # infotech-web-terra-jenkins-aws
-Run a web server with elastic Load Balance on AWS with terraform integrate to Jenkins CI/CD
+Run a web server deployed on AWS Auto Scaling Group using terraform integrated to Jenkins CI/CD.
