@@ -26,13 +26,19 @@ resource "aws_launch_configuration" "custom-launch-config" {
     image_id = data.aws_ami.latest-amazon-linux-image.id
     instance_type = "t2.micro"
     key_name = "terraform_ec2_key"
-    associate_public_ip_address = true
+    # associate_public_ip_address = true
 
     security_groups = [aws_security_group.custom-instance-sg.id]
 
-    user_data = filebase64("install_apache.sh")
+    user_data = file("install_apache.sh")
+    # user_data = <<EOF
+    #                 #!/bin/bash
+    #                 sudo yum update -y && sudo yum install -y docker
+    #                 sudo systemctl start docker
+    #                 sudo usermod -aG docker ec2-user
+    #                 docker run -d -p 8080:80 nginx
+    #             EOF
 
-     
     lifecycle {
       create_before_destroy = true
     }
@@ -48,7 +54,8 @@ resource "aws_autoscaling_group" "custom-group-autoscaling" {
     vpc_zone_identifier = [aws_subnet.customvpc-public-1.id,aws_subnet.customvpc-public-2.id]
     launch_configuration = aws_launch_configuration.custom-launch-config.name
     min_size                    = 2
-    max_size                    = 3
+    max_size                    = 4
+     
     health_check_grace_period   = 100
     health_check_type = "ELB"
 

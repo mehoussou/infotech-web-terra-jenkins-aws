@@ -16,9 +16,9 @@ resource "aws_elb" "custom-elb" {
 # the number of checks before the instance is declared healthy
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    timeout = 3
-    target = "HTTP:80/"
-    interval = 30
+    timeout             = 3
+    target              = "HTTP:80/"
+    interval            = 30
    }
 
     cross_zone_load_balancing = true
@@ -32,11 +32,15 @@ resource "aws_elb" "custom-elb" {
       
 
 # security group for elb
+
+# variable "my_ip" {}
       
 resource "aws_security_group" "custom-elb-sg" {
     vpc_id = aws_vpc.custom-vpc.id
     name = "custom-elb-sg"
-    description = "security group for elb"
+    description = "security group for ELB"
+    # internal = false
+    
   
     egress {
         from_port   = 0
@@ -51,6 +55,7 @@ resource "aws_security_group" "custom-elb-sg" {
         protocol     = "tcp"
         cidr_blocks  = ["0.0.0.0/0"]
     }
+
   
     tags = {
         Name = "custom-elb-sg"
@@ -73,10 +78,10 @@ resource "aws_security_group" "custom-instance-sg" {
   
     ingress {
         from_port   = 22
-        to_port     = 22
+        to_port     = 80
         protocol    = "tcp"
         security_groups = [aws_security_group.custom-elb-sg.id]
-        # cidr_blocks = ["my_ip"]
+        
     }
 
     tags = {
