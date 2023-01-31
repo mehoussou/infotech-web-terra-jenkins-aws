@@ -1,9 +1,6 @@
 
 #define AMI
 
-# public_key_location {}
-# my_ip {}
-
 data "aws_ami" "latest-amazon-linux-image" {
     most_recent = true
     owners = ["amazon"]
@@ -17,19 +14,10 @@ data "aws_ami" "latest-amazon-linux-image" {
         name   = "virtualization-type"
         values = ["hvm"]
     }
-# resource "aws_key_pair" "ssh-key" {
-#      key_name = "terraform_ec2_key"
-#      public_key = file(var.public_key_location)
-#     }
+
 }
 
-
-
-# resource "aws_key_pair" "terraform_ec2_key" {
-#     key_name = "terraform_ec2_key"
-#     # private_key = file(var.PATH_TO_PUBLIC_KEY)
-# }
-    
+   
         
 #DEFINE ASG LAUCNH CONFIG
    
@@ -62,7 +50,6 @@ resource "aws_autoscaling_group" "custom-group-autoscaling" {
     min_size                    = 2
     max_size                    = 3
     health_check_grace_period   = 100
-#   health_check_type = "EC2"
     health_check_type = "ELB"
 
     load_balancers = [aws_elb.custom-elb.name]
@@ -74,6 +61,17 @@ resource "aws_autoscaling_group" "custom-group-autoscaling" {
         propagate_at_launch = true
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
     # output "elb" {
     #  value = aws_elb.custom-elb.dns_name
@@ -99,18 +97,6 @@ resource "aws_autoscaling_group" "custom-group-autoscaling" {
 #     cidr_blocks = ["0.0.0.0/0"]
 #   }
 # }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #   lifecycle {
