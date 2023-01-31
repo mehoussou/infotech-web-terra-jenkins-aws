@@ -1,6 +1,9 @@
 
 #define AMI
 
+# public_key_location {}
+# my_ip {}
+
 data "aws_ami" "latest-amazon-linux-image" {
     most_recent = true
     owners = ["amazon"]
@@ -14,6 +17,10 @@ data "aws_ami" "latest-amazon-linux-image" {
         name   = "virtualization-type"
         values = ["hvm"]
     }
+# resource "aws_key_pair" "ssh-key" {
+#      key_name = "terraform_ec2_key"
+#      public_key = file(var.public_key_location)
+#     }
 }
 
 
@@ -33,7 +40,10 @@ resource "aws_launch_configuration" "custom-launch-config" {
     key_name = "terraform_ec2_key"
     associate_public_ip_address = true
 
+    security_groups = [aws_security_group.custom-instance-sg.id]
+
     user_data = filebase64("install_apache.sh")
+
      
     lifecycle {
       create_before_destroy = true
@@ -47,11 +57,11 @@ resource "aws_launch_configuration" "custom-launch-config" {
 
 resource "aws_autoscaling_group" "custom-group-autoscaling" {
     name                = "custom-group-autoscaling"
-    vpc_zone_identifier = [aws_subnet-customvpc-public-1.id,aws_subnet-customvpc-public-2.id]
+    vpc_zone_identifier = [aws_subnet.customvpc-public-1.id,aws_subnet.customvpc-public-2.id]
     launch_configuration = aws_launch_configuration.custom-launch-config.name
-    min_size             = 2
-    max_size             = 2
-    health_check_grace_period = 100
+    min_size                    = 2
+    max_size                    = 3
+    health_check_grace_period   = 100
 #   health_check_type = "EC2"
     health_check_type = "ELB"
 
@@ -68,9 +78,27 @@ resource "aws_autoscaling_group" "custom-group-autoscaling" {
     # output "elb" {
     #  value = aws_elb.custom-elb.dns_name
     # }
-   
 
+# #security group for instances
+# resource "aws_security_group" "custom-instance-sg" {
+#     vpc_id = aws_vpc.custom-vpc.id
+#     name = "custom-instance-sg"
+#     description = "security group for instances" 
 
+# ingress {
+#     from_port   = 80
+#     to_port     = 80
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
 
 
 

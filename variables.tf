@@ -20,3 +20,6 @@
 #   type        = string
 #   description = "Name of domain."
 # }
+
+# my_ip = "75.71.114.225/32"
+# public_key_location = "/c/Users/mehou/.ssh/id_rsa.pub"
